@@ -10,6 +10,7 @@ AWS_REGION: us-east-1
 jobs:
 build:
 runs-on: ubuntu-latest
+
 steps:
   - name: Checkout
     uses: actions/checkout@v3
@@ -33,4 +34,3 @@ steps:
       docker build -t service-a:$TAG ./service-a
       docker tag service-a:$TAG ${{ steps.ecr.outputs.registry }}/service-a:$TAG
       docker push ${{ steps.ecr.outputs.registry }}/service-a:$TAG
-```
