@@ -1,38 +1,32 @@
 name: Build & Push to ECR
 
 on:
-push:
-branches: [ "main" ]
+ push:
+  branches: [ "main" ]
 
 env:
-AWS_REGION: us-east-1
+ AWS_REGION: us-east-1
 
 jobs:
-build:
-runs-on: ubuntu-latest
-
-
-steps:
-  - name: Checkout
-    uses: actions/checkout@v3
-
-  - name: Configure AWS
-    uses: aws-actions/configure-aws-credentials@v4
-    with:
-      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      aws-region: us-east-1
-
-  - name: Login to ECR
-    id: ecr
-    uses: aws-actions/amazon-ecr-login@v1
-
-  - name: Set image tag
-    run: echo "TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-  - name: Build & push service-a
-    run: |
-      docker build -t service-a:$TAG ./service-a
-      docker tag service-a:$TAG ${{ steps.ecr.outputs.registry }}/service-a:$TAG
-      docker push ${{ steps.ecr.outputs.registry }}/service-a:$TAG
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Configure AWS
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Login to ECR
+      id: ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: Set image tag
+      run: echo "TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+    - name: Build & push service-a
+      run: |
+        docker build -t service-a:$TAG ./service-a
+        docker tag service-a:$TAG ${{ steps.ecr.outputs.registry }}/service-a:$TAG
+        docker push ${{ steps.ecr.outputs.registry }}/service-a:$TAG
 
