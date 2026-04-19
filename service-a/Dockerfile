@@ -4,7 +4,7 @@ FROM nginx:latest
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy your app files into nginx folder
-COPY my-app/service-a /usr/share/nginx/html
+COPY service-a /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
