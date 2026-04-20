@@ -1,31 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: multi-cluster-git-appset
+  name: multi-cluster-gitops
   namespace: argocd
 
 spec:
   generators:
-    - matrix:
-        generators:
-          # Cluster definitions
-          - list:
-              elements:
-                - cluster: cluster1
-                  server: https://kubernetes.default.svc
-                - cluster: cluster2
-                  server: https://https://B2379F51DCD4EDE28535B15208E06A4C.gr7.us-east-1.eks.amazonaws.com   # replace this
+    - clusters: {}   # 👈 Automatically uses ALL clusters registered in ArgoCD
 
-          # Git structure
-          - git:
-              repoURL: https://github.com/Nonsocha/Gittops-cluster.git
-              revision: HEAD
-              directories:
-                - path: service-*
+    - git:
+        repoURL: https://github.com/Nonsocha/Gittops-cluster.git
+        revision: HEAD
+        directories:
+          - path: service-*
 
   template:
     metadata:
-      name: "{{path.basename}}-{{cluster}}"
+      name: "{{name}}-{{path.basename}}"
 
     spec:
       project: default
