@@ -6,13 +6,14 @@ metadata:
 
 spec:
   generators:
-    - clusters: {}   # 👈 Automatically uses ALL clusters registered in ArgoCD
-
-    - git:
-        repoURL: https://github.com/Nonsocha/Gittops-cluster.git
-        revision: HEAD
-        directories:
-          - path: service-*
+    - matrix:
+        generators:
+          - clusters: {}
+          - git:
+              repoURL: https://github.com/Nonsocha/Gittops-cluster.git
+              revision: HEAD
+              directories:
+                - path: service-*
 
   template:
     metadata:
