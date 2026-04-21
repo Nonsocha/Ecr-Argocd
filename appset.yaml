@@ -8,7 +8,12 @@ spec:
   generators:
     - matrix:
         generators:
-          - clusters: {}
+          - list:
+              elements:
+                - name: cluster1
+                  server: https://B2379F51DCD4EDE28535B15208E06A4C.gr7.us-east-1.eks.amazonaws.com
+                - name: cluster2
+                  server: https://A95625E88BDAD64C149DCA04C52B3DD8.gr7.us-east-1.eks.amazonaws.com
           - git:
               repoURL: https://github.com/Nonsocha/Gittops-cluster.git
               revision: HEAD
