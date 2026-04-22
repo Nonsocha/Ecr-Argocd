@@ -16,7 +16,7 @@ spec:
                   server: https://A95625E88BDAD64C149DCA04C52B3DD8.gr7.us-east-1.eks.amazonaws.com
 
           - git:
-              repoURL: https://github.com/Nonsocha/Gittops-cluster.git
+              repoURL: https://github.com/Nonsocha/Ecr-Argocd.git
               revision: HEAD
               directories:
                 - path: service-*
