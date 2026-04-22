@@ -29,7 +29,7 @@ spec:
       project: default
 
       source:
-        repoURL: https://github.com/Nonsocha/Gittops-cluster.git
+        repoURL: https://github.com/Nonsocha/Ecr-Argocd.git
         targetRevision: HEAD
         path: "{{path}}"
 
