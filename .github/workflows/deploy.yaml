@@ -1,9 +1,9 @@
 name: Build, Push, and Update Manifest
-
 on:
+
 push:
-branches:
-- main
+ branches:
+ - main
 
 jobs:
 deploy:
