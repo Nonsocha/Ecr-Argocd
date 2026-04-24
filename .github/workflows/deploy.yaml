@@ -9,7 +9,6 @@ jobs:
 deploy:
 runs-on: ubuntu-latest
 
-```
 steps:
   - name: Checkout repo
     uses: actions/checkout@v3
@@ -45,4 +44,3 @@ steps:
       git add service-b/deployment.yaml
       git commit -m "Update service-b image to $IMAGE_TAG" || echo "No changes"
       git push
-```
