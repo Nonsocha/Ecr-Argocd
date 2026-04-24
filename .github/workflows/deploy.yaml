@@ -1,46 +1,39 @@
 name: Build, Push, and Update Manifest
-on:
 
-push:
- branches:
- - main
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-deploy:
-runs-on: ubuntu-latest
-
-steps:
-  - name: Checkout repo
-    uses: actions/checkout@v3
-
-  - name: Set image tag
-    run: echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
-
-  - name: Configure AWS
-    uses: aws-actions/configure-aws-credentials@v2
-    with:
-      aws-access-key-id: \${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      aws-region: us-east-1
-
-  - name: Login to ECR
-    run: |
-      aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 707913648704.dkr.ecr.us-east-1.amazonaws.com
-
-  - name: Build & Push service-b
-    run: |
-      docker build -t service-b:$IMAGE_TAG ./service-b
-      docker tag service-b:$IMAGE_TAG 707913648704.dkr.ecr.us-east-1.amazonaws.com/service-b:$IMAGE_TAG
-      docker push 707913648704.dkr.ecr.us-east-1.amazonaws.com/service-b:$IMAGE_TAG
-
-  - name: Update deployment.yaml
-    run: |
-      sed -i "s|image: .*service-b:.*|image: 707913648704.dkr.ecr.us-east-1.amazonaws.com/service-b:$IMAGE_TAG|" service-b/deployment.yaml
-
-  - name: Commit and push changes
-    run: |
-      git config user.name "github-actions"
-      git config user.email "actions@github.com"
-      git add service-b/deployment.yaml
-      git commit -m "Update service-b image to $IMAGE_TAG" || echo "No changes"
-      git push
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 707913648704.dkr.ecr.us-east-1.amazonaws.com
+      - name: Build & Push service-b
+        run: |
+          docker build -t service-b:$IMAGE_TAG ./service-b
+          docker tag service-b:$IMAGE_TAG 707913648704.dkr.ecr.us-east-1.amazonaws.com/service-b:$IMAGE_TAG
+          docker push 707913648704.dkr.ecr.us-east-1.amazonaws.com/service-b:$IMAGE_TAG
+      - name: Update deployment.yaml
+        run: |
+          sed -i "s|image: .*service-b:.*|image: 707913648704.dkr.ecr.us-east-1.amazonaws.com/service-b:$IMAGE_TAG|" service-b/deployment.yaml
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add service-b/deployment.yaml
+          git commit -m "Update service-b image to $IMAGE_TAG" || echo "No changes"
+          git push
